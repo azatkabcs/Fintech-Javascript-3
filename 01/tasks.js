@@ -52,7 +52,10 @@ function getMinMax(string) {
  * @return {number} число под номером х
  */
 function fibonacciSimple(x) {
-  return x;
+	if (x < 0)
+		return x % 2 ? fibonacciSimple(-x) : -fibonacciSimple(-x);
+	else
+		return (x === 0) || (x === 1) ? x : fibonacciSimple(x-1) + fibonacciSimple(x-2);
 }
 
 /* ============================================= */
@@ -63,9 +66,29 @@ function fibonacciSimple(x) {
  * @param {number} x номер числа
  * @return {number} число под номером х
  */
-function fibonacciWithCache(x) {
-  return x;
+const memory = (fn) => {
+	let cache = {};
+
+	return (n) => {
+    	if (n in cache) {
+      		//console.log('из кэша', n);
+      		return cache[n];
+    	}
+    	else {
+      		//console.log('вычисляем', n);
+      		let result = fn(n);
+      		cache[n] = result;
+      		return result;
+    	}
+  	}
 }
+
+const fibonacciWithCache = memory((x) => {
+	if (x < 0)
+		return x % 2 ? fibonacciWithCache(-x) : -fibonacciWithCache(-x);
+	else
+		return (x === 0) || (x === 1) ? x : fibonacciWithCache(x-1) + fibonacciWithCache(x-2);
+});
 
 /* ============================================= */
 
@@ -85,7 +108,24 @@ function fibonacciWithCache(x) {
  * @return {string}
  */
 function printNumbers(max, cols) {
+	const rows = parseInt((max+1)/cols) + ((max+1)%cols !== 0);
+	let string = '';
+	let elem = null;
 
+	for (let i = 0; i < rows; i++){
+		elem = i;
+		for(let j = 0 ; j < cols; j++){
+			if (elem <= max)
+				(elem < 10) ? string += ' ' + elem : string += elem;	
+			if (j < cols - 1 && elem < max)
+				string += ' ';		
+			elem += rows;	
+		}
+		if (i < rows - 1)
+			string += '\n';
+	}
+
+	return string;
 }
 
 /* ============================================= */
@@ -96,7 +136,13 @@ function printNumbers(max, cols) {
  * @return {string}
  */
 function rle(input) {
+	function zip(match){
+		if (match.length > 1) 
+			match = match[0]+ match.length;
+		return match
+	}
 
+	return input.replace(/(\w)\1*/gi, zip);
 }
 
 module.exports = {
