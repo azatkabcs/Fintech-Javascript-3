@@ -5,43 +5,41 @@
  * '1 и 6.45, -2, но 8, а затем 15, то есть 2.7 и -1028' => { min: -1028, max: 15 }
  */
 function getMinMax(string) {
-	let array = [];
-	let buffer = string;
-	let number_int = null, number_float = null;
+  const array = [];
+  const buffer = string;
+  let numberFloat = null;
 
-	for (let i = 0; i < buffer.length; i++){
-		number_float = parseFloat(buffer.slice(i));
-		if (!isNaN(number_float)){
-			array.push(number_float);
-			i += number_float.toString().length ;
-		}	
-	}	
+  for (let i = 0; i < buffer.length; i++) {
+    numberFloat = parseFloat(buffer.slice(i));
+    if (!isNaN(numberFloat)) {
+      array.push(numberFloat);
+      i += numberFloat.toString().length;
+    }
+  }
 
-	sort();
+  const sort = () => {
+    let exit = null;
+    let temp;
 
-	return {
-		min: array[0],
-		max: array[array.length - 1]
-	}
+    while (!exit) {
+      exit = true;
+      for (let i = 0; i < (array.length - 1); i++) {
+        if (array[i] > array[i + 1]) {
+          temp = array[i];
+          array[i] = array[i + 1];
+          array[i + 1] = temp;
+          exit = false;
+        }
+      }
+    }
+  };
 
-	function sort(){
-		let exit = null;
-		let temp;
+  sort();
 
-		while (!exit) 
-		{
-			exit = true;
-			for (let i = 0; i < (array.length - 1); i++) 
-				if (array[i] > array[i + 1]) 
-    			{
-    				temp = array[i];
-    				array[i] = array[i + 1];
-     				array[i + 1] = temp;
-     				exit = false; 
-    			}
- 		}
-	}
-
+  return {
+    min: array[0],
+    max: array[array.length - 1]
+  };
 }
 
 /* ============================================= */
@@ -52,11 +50,12 @@ function getMinMax(string) {
  * @return {number} число под номером х
  */
 function fibonacciSimple(x) {
-	if (x < 0)
-		return x % 2 ? fibonacciSimple(-x) : -fibonacciSimple(-x);
-	else
-		return (x === 0) || (x === 1) ? x : fibonacciSimple(x-1) + fibonacciSimple(x-2);
+  if (x < 0) {
+    return x % 2 ? fibonacciSimple(-x) : -fibonacciSimple(-x);
+  }
+  return (x === 0) || (x === 1) ? x : fibonacciSimple(x - 1) + fibonacciSimple(x - 2);
 }
+
 
 /* ============================================= */
 
@@ -66,28 +65,27 @@ function fibonacciSimple(x) {
  * @param {number} x номер числа
  * @return {number} число под номером х
  */
-const memory = (fn) => {
-	let cache = {};
+const memory = fn => {
+  const cache = {};
 
-	return (n) => {
-    	if (n in cache) {
-      		//console.log('из кэша', n);
-      		return cache[n];
-    	}
-    	else {
-      		//console.log('вычисляем', n);
-      		let result = fn(n);
-      		cache[n] = result;
-      		return result;
-    	}
-  	}
-}
+  return n => {
+    if (n in cache) {
+      // console.log('из кэша', n);
+      return cache[n];
+    }
+    // console.log('вычисляем', n);
+    const result = fn(n);
 
-const fibonacciWithCache = memory((x) => {
-	if (x < 0)
-		return x % 2 ? fibonacciWithCache(-x) : -fibonacciWithCache(-x);
-	else
-		return (x === 0) || (x === 1) ? x : fibonacciWithCache(x-1) + fibonacciWithCache(x-2);
+    cache[n] = result;
+    return result;
+  };
+};
+
+const fibonacciWithCache = memory(x => {
+  if (x < 0) {
+    return x % 2 ? fibonacciWithCache(-x) : -fibonacciWithCache(-x);
+  }
+  return (x === 0) || (x === 1) ? x : fibonacciWithCache(x - 1) + fibonacciWithCache(x - 2);
 });
 
 /* ============================================= */
@@ -108,24 +106,28 @@ const fibonacciWithCache = memory((x) => {
  * @return {string}
  */
 function printNumbers(max, cols) {
-	const rows = parseInt((max+1)/cols) + ((max+1)%cols !== 0);
-	let string = '';
-	let elem = null;
+  const rows = parseInt((max + 1) / cols, 10) + ((max + 1) % cols !== 0);
+  const probel = ' ';
+  let string = '';
+  let elem = null;
 
-	for (let i = 0; i < rows; i++){
-		elem = i;
-		for(let j = 0 ; j < cols; j++){
-			if (elem <= max)
-				(elem < 10) ? string += ' ' + elem : string += elem;	
-			if (j < cols - 1 && elem < max)
-				string += ' ';		
-			elem += rows;	
-		}
-		if (i < rows - 1)
-			string += '\n';
-	}
+  for (let i = 0; i < rows; i++) {
+    elem = i;
+    for (let j = 0; j < cols; j++) {
+      if (elem <= max) {
+        (elem < 10) ? string += probel + elem : string += elem;
+      }
+      if (j < cols - 1 && elem < max) {
+        string += probel;
+      }
+      elem += rows;
+    }
+    if (i < rows - 1) {
+      string += '\n';
+    }
+  }
 
-	return string;
+  return string;
 }
 
 /* ============================================= */
@@ -136,13 +138,14 @@ function printNumbers(max, cols) {
  * @return {string}
  */
 function rle(input) {
-	function zip(match){
-		if (match.length > 1) 
-			match = match[0]+ match.length;
-		return match
-	}
+  function zip(match) {
+    if (match.length > 1) {
+      match = match[0] + match.length;
+    }
+    return match;
+  }
 
-	return input.replace(/(\w)\1*/gi, zip);
+  return input.replace(/(\w)\1*/gi, zip);
 }
 
 module.exports = {
