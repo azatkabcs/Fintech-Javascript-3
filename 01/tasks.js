@@ -51,9 +51,15 @@ function getMinMax(string) {
  */
 function fibonacciSimple(x) {
   if (x < 0) {
-    return x % 2 ? fibonacciSimple(-x) : -fibonacciSimple(-x);
+    if (x % 2) {
+      return fibonacciSimple(-x);
+    }
+    return -fibonacciSimple(-x);
   }
-  return (x === 0) || (x === 1) ? x : fibonacciSimple(x - 1) + fibonacciSimple(x - 2);
+  if (x === 0 || x === 1) {
+    return x;
+  }
+  return fibonacciSimple(x - 1) + fibonacciSimple(x - 2);
 }
 
 
@@ -66,7 +72,7 @@ function fibonacciSimple(x) {
  * @return {number} число под номером х
  */
 const memory = fn => {
-  const cache = {};
+  const cache = { 0: 0, 1: 1 };
 
   return n => {
     if (n in cache) {
@@ -83,9 +89,15 @@ const memory = fn => {
 
 const fibonacciWithCache = memory(x => {
   if (x < 0) {
-    return x % 2 ? fibonacciWithCache(-x) : -fibonacciWithCache(-x);
+    if (x % 2) {
+      return fibonacciSimple(-x);
+    }
+    return -fibonacciSimple(-x);
   }
-  return (x === 0) || (x === 1) ? x : fibonacciWithCache(x - 1) + fibonacciWithCache(x - 2);
+  if (x === 0 || x === 1) {
+    return x;
+  }
+  return fibonacciSimple(x - 1) + fibonacciSimple(x - 2);
 });
 
 /* ============================================= */
