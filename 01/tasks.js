@@ -5,7 +5,12 @@
  * '1 и 6.45, -2, но 8, а затем 15, то есть 2.7 и -1028' => { min: -1028, max: 15 }
  */
 function getMinMax(string) {
+  const array = string.match(/-?\d+(\.\d+)?/g).map(Number);
 
+  return {
+    min: Math.min(...array),
+    max: Math.max(...array)
+  };
 }
 
 /* ============================================= */
@@ -16,8 +21,18 @@ function getMinMax(string) {
  * @return {number} число под номером х
  */
 function fibonacciSimple(x) {
-  return x;
+  if (x < 0) {
+    if (x % 2) {
+      return fibonacciSimple(-x);
+    }
+    return -fibonacciSimple(-x);
+  }
+  if (x === 0 || x === 1) {
+    return x;
+  }
+  return fibonacciSimple(x - 1) + fibonacciSimple(x - 2);
 }
+
 
 /* ============================================= */
 
@@ -27,9 +42,34 @@ function fibonacciSimple(x) {
  * @param {number} x номер числа
  * @return {number} число под номером х
  */
-function fibonacciWithCache(x) {
-  return x;
-}
+const memory = fn => {
+  const cache = { 0: 0, 1: 1 };
+
+  return n => {
+    if (n in cache) {
+      // console.log('из кэша', n);
+      return cache[n];
+    }
+    // console.log('вычисляем', n);
+    const result = fn(n);
+
+    cache[n] = result;
+    return result;
+  };
+};
+
+const fibonacciWithCache = memory(x => {
+  if (x < 0) {
+    if (x % 2) {
+      return fibonacciSimple(-x);
+    }
+    return -fibonacciSimple(-x);
+  }
+  if (x === 0 || x === 1) {
+    return x;
+  }
+  return fibonacciSimple(x - 1) + fibonacciSimple(x - 2);
+});
 
 /* ============================================= */
 
@@ -49,7 +89,25 @@ function fibonacciWithCache(x) {
  * @return {string}
  */
 function printNumbers(max, cols) {
+  const rows = parseInt((max + 1) / cols, 10) + ((max + 1) % cols !== 0);
+  const array2 = [];
+  let elem = null;
+  let array1;
 
+  for (let i = 0; i < rows; i++) {
+    elem = i;
+    array1 = [];
+
+    for (let j = 0; j < cols; j++) {
+      if (elem <= max) {
+        array1.push((' ' + elem.toString()).slice(-2));
+      }
+      elem += rows;
+    }
+    array2.push(array1.join(' '));
+  }
+
+  return array2.join('\n');
 }
 
 /* ============================================= */
@@ -60,7 +118,14 @@ function printNumbers(max, cols) {
  * @return {string}
  */
 function rle(input) {
+  function zip(match) {
+    if (match.length > 1) {
+      match = match[0] + match.length;
+    }
+    return match;
+  }
 
+  return input.replace(/(\w)\1*/gi, zip);
 }
 
 module.exports = {
