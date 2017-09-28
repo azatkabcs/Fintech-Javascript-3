@@ -119,27 +119,24 @@ const fibonacciWithCache = memory(x => {
  */
 function printNumbers(max, cols) {
   const rows = parseInt((max + 1) / cols, 10) + ((max + 1) % cols !== 0);
-  const probel = ' ';
-  let string = '';
+  const array2 = [];
   let elem = null;
+  let array1;
 
   for (let i = 0; i < rows; i++) {
     elem = i;
+    array1 = [];
+
     for (let j = 0; j < cols; j++) {
       if (elem <= max) {
-        (elem < 10) ? string += probel + elem : string += elem;
-      }
-      if (j < cols - 1 && elem < max) {
-        string += probel;
+        array1.push((' ' + elem.toString()).slice(-2));
       }
       elem += rows;
     }
-    if (i < rows - 1) {
-      string += '\n';
-    }
+    array2.push(array1.join(' '));
   }
 
-  return string;
+  return array2.join('\n');
 }
 
 /* ============================================= */
