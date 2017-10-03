@@ -3,12 +3,36 @@
  * Доп. задание: предложите несколько вариантов решения.
  */
 function timer(logger = console.log) {
-  for (var i = 0; i < 10; i++) {
+  for (let i = 0; i < 10; i++) { /* первое решение */
     setTimeout(() => {
       logger(i);
     }, 100);
   }
+/* второе решение -- IIFE
+
+  for (var i = 0; i < 10; i++) {
+    (index => {
+      setTimeout(() => {
+        logger(index);
+      }, 100);
+    })(i);
+  }
+
+  третье решение -- замыкание
+
+  for (var i = 0; i < 10; i++) {
+    const user = {
+      num: i,
+      log: () => {
+        logger(user.num);
+      }
+    };
+
+    setTimeout(user.log, 100);
+  }
+*/
 }
+
 
 /*= ============================================ */
 
@@ -20,7 +44,9 @@ function timer(logger = console.log) {
  * @return {Function} функция с нужным контекстом
  */
 function customBind(func, context, ...args) {
-
+  return function(...bindArgs) {
+    return func.call(context, ...args, ...bindArgs);
+  };
 }
 
 /*= ============================================ */
@@ -33,7 +59,10 @@ function customBind(func, context, ...args) {
  * sum :: void -> Number
  */
 function sum(x) {
-  return 0;
+  if (x === undefined) {
+    return 0;
+  }
+  return y => (y === undefined) ? x : sum(x + y);
 }
 
 /*= ============================================ */
@@ -45,7 +74,7 @@ function sum(x) {
  * @return {boolean}
  */
 function anagram(first, second) {
-  return false;
+  return (first.split('').sort().join('') === second.split('').sort().join(''));
 }
 
 /*= ============================================ */
@@ -57,7 +86,7 @@ function anagram(first, second) {
  * @return {Array<number>} массив уникальных значений, отсортированный по возрастанию
  */
 function getUnique(arr) {
-  return [];
+  return [...new Set(arr.sort((x, y) => x - y))];
 }
 
 /**
@@ -67,7 +96,7 @@ function getUnique(arr) {
  * @return {Array<number>} массив уникальных значений, отсортированный по возрастанию
  */
 function getIntersection(first, second) {
-  return [];
+  return first.filter(x => second.includes(x)).sort((x, y) => x - y);
 }
 
 /* ============================================= */
@@ -86,7 +115,10 @@ function getIntersection(first, second) {
  * @return {boolean}
  */
 function isIsomorphic(left, right) {
-
+  if (left.length !== right.length) {
+    return false;
+  }
+  return getIntersection(left.split(''), right.split('')).length + 1 === left.length;
 }
 
 module.exports = {
