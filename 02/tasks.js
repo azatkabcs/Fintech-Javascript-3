@@ -115,10 +115,17 @@ function getIntersection(first, second) {
  * @return {boolean}
  */
 function isIsomorphic(left, right) {
+  let flag = 0;
+
   if (left.length !== right.length) {
     return false;
   }
-  return getIntersection(left.split(''), right.split('')).length + 1 === left.length;
+  for (let i = 0; i < left.length; i++) {
+    if (left[i] !== right[i]) {
+      flag++;
+    }
+  }
+  return flag <= 1;
 }
 
 module.exports = {
