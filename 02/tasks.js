@@ -62,7 +62,7 @@ function sum(x) {
   if (x === undefined) {
     return 0;
   }
-  return y => (y === undefined) ? x : sum(x + y);
+  return y => y === undefined ? x : sum(x + y);
 }
 
 /*= ============================================ */
@@ -74,7 +74,27 @@ function sum(x) {
  * @return {boolean}
  */
 function anagram(first, second) {
-  return (first.split('').sort().join('') === second.split('').sort().join(''));
+  const keys = {};
+
+  if (first.length !== second.length) {
+    return false; //  сразу выходим, если длина разная
+  }
+  for (let i = 0; i < first.length; i++) {
+    first[i] in keys ? keys[first[i]]++ : keys[first[i]] = 1;
+  }
+  for (let i = 0; i < second.length; i++) {
+    if (keys[second[i]] > 0) {
+      keys[second[i]]--;
+    } else {
+      return false; //  выйдем раньше, если нет такого ключа или количество таких букв больше во втором массиве
+    }
+  }
+  for (const key in keys) {
+    if (keys[key] !== 0) {
+      return false;
+    }
+  }
+  return true;
 }
 
 /*= ============================================ */
@@ -96,7 +116,19 @@ function getUnique(arr) {
  * @return {Array<number>} массив уникальных значений, отсортированный по возрастанию
  */
 function getIntersection(first, second) {
-  return first.filter(x => second.includes(x)).sort((x, y) => x - y);
+  const keys = {};
+  const result = [];
+
+  for (let i = 0; i < first.length; i++) {
+    first[i] in keys ? keys[first[i]]++ : keys[first[i]] = 1;
+  }
+  for (let i = 0; i < second.length; i++) {
+    if (keys[second[i]] > 0) {
+      result.push(second[i]);
+      keys[second[i]]--;
+    }
+  }
+  return result.sort((x, y) => x - y);
 }
 
 /* ============================================= */
@@ -115,17 +147,20 @@ function getIntersection(first, second) {
  * @return {boolean}
  */
 function isIsomorphic(left, right) {
-  let flag = 0;
+  let flag = false;
 
   if (left.length !== right.length) {
-    return false;
+    return flag;
   }
   for (let i = 0; i < left.length; i++) {
     if (left[i] !== right[i]) {
-      flag++;
+      if (flag) {
+        return false; //  если второй раз несовпадение, сразу же выходим
+      }
+      flag = true;
     }
   }
-  return flag <= 1;
+  return true;
 }
 
 module.exports = {
