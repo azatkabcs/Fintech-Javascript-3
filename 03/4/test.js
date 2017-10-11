@@ -6,7 +6,7 @@ describe('Lesson 3 - task 4', () => {
   it('should be rejected if firstly one of the promises was rejected', done => {
     promiseRace([
       delayPromise(Promise.reject('test_error'), 500),
-      delayPromise(Promise.resolve('test_value'), 1000)
+      delayPromise(Promise.resolve('test_value'), 500)
     ]).then(
       value => done(new Error(`Resolution with ${value}`)),
       errValue => {
