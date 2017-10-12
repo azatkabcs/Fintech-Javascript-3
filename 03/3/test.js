@@ -32,7 +32,7 @@ describe('Lesson 3 - task 3', () => {
 
   it('should be rejected if one was rejected with delay', done => {
     promiseAll([
-      delayPromise(Promise.reject('test_error'), 2000),
+      delayPromise(Promise.reject('test_error'), 1000),
       Promise.resolve(2),
       Promise.resolve(3)
     ]).then(
