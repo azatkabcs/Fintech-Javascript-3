@@ -3,12 +3,36 @@
  * Доп. задание: предложите несколько вариантов решения.
  */
 function timer(logger = console.log) {
-  for (var i = 0; i < 10; i++) {
+  for (let i = 0; i < 10; i++) { /* первое решение */
     setTimeout(() => {
       logger(i);
     }, 100);
   }
+/* второе решение -- IIFE
+
+  for (var i = 0; i < 10; i++) {
+    (index => {
+      setTimeout(() => {
+        logger(index);
+      }, 100);
+    })(i);
+  }
+
+  третье решение -- замыкание
+
+  for (var i = 0; i < 10; i++) {
+    const user = {
+      num: i,
+      log: () => {
+        logger(user.num);
+      }
+    };
+
+    setTimeout(user.log, 100);
+  }
+*/
 }
+
 
 /*= ============================================ */
 
@@ -20,7 +44,9 @@ function timer(logger = console.log) {
  * @return {Function} функция с нужным контекстом
  */
 function customBind(func, context, ...args) {
-
+  return function(...bindArgs) {
+    return func.call(context, ...args, ...bindArgs);
+  };
 }
 
 /*= ============================================ */
@@ -33,7 +59,10 @@ function customBind(func, context, ...args) {
  * sum :: void -> Number
  */
 function sum(x) {
-  return 0;
+  if (x === undefined) {
+    return 0;
+  }
+  return y => y === undefined ? x : sum(x + y);
 }
 
 /*= ============================================ */
@@ -45,7 +74,27 @@ function sum(x) {
  * @return {boolean}
  */
 function anagram(first, second) {
-  return false;
+  const keys = {};
+
+  if (first.length !== second.length) {
+    return false; //  сразу выходим, если длина разная
+  }
+  for (let i = 0; i < first.length; i++) {
+    first[i] in keys ? keys[first[i]]++ : keys[first[i]] = 1;
+  }
+  for (let i = 0; i < second.length; i++) {
+    if (keys[second[i]] > 0) {
+      keys[second[i]]--;
+    } else {
+      return false; //  выйдем раньше, если нет такого ключа или количество таких букв больше во втором массиве
+    }
+  }
+  for (const key in keys) {
+    if (keys[key] !== 0) {
+      return false;
+    }
+  }
+  return true;
 }
 
 /*= ============================================ */
@@ -57,7 +106,7 @@ function anagram(first, second) {
  * @return {Array<number>} массив уникальных значений, отсортированный по возрастанию
  */
 function getUnique(arr) {
-  return [];
+  return [...new Set(arr.sort((x, y) => x - y))];
 }
 
 /**
@@ -67,7 +116,19 @@ function getUnique(arr) {
  * @return {Array<number>} массив уникальных значений, отсортированный по возрастанию
  */
 function getIntersection(first, second) {
-  return [];
+  const keys = {};
+  const result = [];
+
+  for (let i = 0; i < first.length; i++) {
+    first[i] in keys ? keys[first[i]]++ : keys[first[i]] = 1;
+  }
+  for (let i = 0; i < second.length; i++) {
+    if (keys[second[i]] > 0) {
+      result.push(second[i]);
+      keys[second[i]]--;
+    }
+  }
+  return result.sort((x, y) => x - y);
 }
 
 /* ============================================= */
@@ -86,7 +147,20 @@ function getIntersection(first, second) {
  * @return {boolean}
  */
 function isIsomorphic(left, right) {
+  let flag = false;
 
+  if (left.length !== right.length) {
+    return flag;
+  }
+  for (let i = 0; i < left.length; i++) {
+    if (left[i] !== right[i]) {
+      if (flag) {
+        return false; //  если второй раз несовпадение, сразу же выходим
+      }
+      flag = true;
+    }
+  }
+  return true;
 }
 
 module.exports = {

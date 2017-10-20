@@ -63,6 +63,8 @@ describe('Lesson 2', () => {
     it('should check are words anagrams of each other', () => {
       expect(anagram('просветитель', 'терпеливость')).to.be.ok();
       expect(anagram('первый', 'терпеливость')).not.to.be.ok();
+      expect(anagram('просветитель', 'терпяливость')).not.to.be.ok();
+      expect(anagram('старорежимность', 'нерасторжимость')).to.be.ok();
     });
   });
 
@@ -75,8 +77,11 @@ describe('Lesson 2', () => {
 
   describe('getIntersection', () => {
     it('should return sorted intersection of arrays', () => {
-      expect(getIntersection([1, 5, 7, 9, 3,], [1, 2, 3, 4])).to.eql([1, 3]);
+      expect(getIntersection([1, 5, 7, 9, 3], [1, 2, 3, 4])).to.eql([1, 3]);
       expect(getIntersection([1, 9, 10, 3, 5, 7], [10, 3, 4])).to.eql([3, 10]);
+      expect(getIntersection([1, 5, 7, 9, 3, 3], [1, 3, 3, 3])).to.eql([1, 3, 3]);
+      expect(getIntersection([1, 9, 10, 3, 5, 7], [1, 10, 9, 3, 5, 7])).to.eql([1, 3, 5, 7, 9, 10]);
+      expect(getIntersection([1, 9, 10, 3, 5, 7], [2, 4, 6, 8])).to.eql([]);
     });
   });
 
@@ -85,6 +90,8 @@ describe('Lesson 2', () => {
       expect(isIsomorphic('help', 'hell')).to.be.ok();
       expect(isIsomorphic('hold', 'hell')).not.to.be.ok();
       expect(isIsomorphic('help', 'hell yeah')).not.to.be.ok();
+      expect(isIsomorphic('help', 'phel')).not.to.be.ok();
+      expect(isIsomorphic('help', 'help')).to.be.ok();
     });
   });
 });
